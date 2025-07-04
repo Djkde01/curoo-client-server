@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -19,13 +20,13 @@ public class Client {
     private Integer clientId;
 
     @ManyToOne
-    @Column(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User userId;
 
     @Column(name = "id_type")
     private String idType;
 
-    @Column(name = "id_number")
+    @Column(name = "id_number", unique = true)
     private String idNumber;
 
     private String name;

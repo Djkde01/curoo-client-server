@@ -9,9 +9,6 @@ import com.curootest.clientback.persistence.entity.Client;
 
 public interface ClientCrudRepository extends CrudRepository<Client, Integer> {
 
-    // READ - Get all clients
-    List<Client> findAll();
-
     // READ - Get clients by ID type and ID number
     Client findByIdTypeAndIdNumber(String idType, String idNumber);
 

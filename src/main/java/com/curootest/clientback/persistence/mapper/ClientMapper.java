@@ -13,7 +13,7 @@ import com.curootest.clientback.persistence.entity.Client;
 public interface ClientMapper {
 
     @Mappings({
-            @Mapping(target = "id", source = "client.id"),
+            @Mapping(target = "id", source = "client.clientId"),
             @Mapping(target = "name", source = "client.name"),
             @Mapping(target = "surname", source = "client.surname"),
             @Mapping(target = "idType", source = "client.idType"),
@@ -26,5 +26,15 @@ public interface ClientMapper {
 
     List<Client> toClients(List<ClientDTO> clientDTOs);
 
+    @Mappings({
+        @Mapping(target = "clientId", source = "clientDTO.id"),
+        @Mapping(target = "name", source = "clientDTO.name"),
+        @Mapping(target = "surname", source = "clientDTO.surname"),
+        @Mapping(target = "idType", source = "clientDTO.idType"),
+        @Mapping(target = "idNumber", source = "clientDTO.idNumber"),
+        @Mapping(target = "creationDate", ignore = true),
+        @Mapping(target = "modificationDate", ignore = true),
+        @Mapping(target = "userId", ignore = true)
+})
     Client toClient(ClientDTO clientDTO);
 }
