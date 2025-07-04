@@ -3,6 +3,7 @@ package com.curootest.clientback.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.curootest.clientback.domain.ClientDTO;
@@ -13,7 +14,11 @@ import com.curootest.clientback.persistence.mapper.ClientMapper;
 
 @Repository
 public class ClientRepository implements ClientDTORepository {
+
+    @Autowired
     private ClientCrudRepository clientCrudRepository;
+
+    @Autowired
     private ClientMapper mapper;
 
     @Override
