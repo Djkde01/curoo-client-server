@@ -5,6 +5,8 @@ public class UserDTO {
     private String name;
     private String surname;
     private String email;
+    private String password;
+    private String mobilePhone;
 
     // Getters and Setters
     public String getId() {
@@ -23,6 +25,14 @@ public class UserDTO {
         return email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -37,5 +47,13 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 }

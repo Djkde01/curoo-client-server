@@ -18,4 +18,5 @@ public interface UserDTORepository {
     // Method to delete a user by ID
     void deleteUserById(String id);
 
+    Optional<UserDTO> findByEmail(String email);
 }

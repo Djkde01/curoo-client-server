@@ -1,13 +1,19 @@
 package com.curootest.clientback.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,17 +24,19 @@ public class User {
 
     private String surname;
 
-    @Column(name = "mobile_phone")
+    @Column(name = "mobile_phone", unique = true)
     private String mobilePhone;
 
+    @Column(unique = true)
     private String email;
 
-    @Column(name = "password")
-    private String passwordHash;
+    private String password;
 
+    @CreationTimestamp
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+    @UpdateTimestamp
     @Column(name = "modification_date")
     private LocalDateTime modificationDate;
 
@@ -76,12 +84,12 @@ public class User {
         this.modificationDate = LocalDateTime.now();
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
         this.modificationDate = LocalDateTime.now();
     }
 
@@ -103,4 +111,22 @@ public class User {
 
     @OneToMany(mappedBy = "userId")
     private List<Client> clients;
+
+    public List<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<Client> clients) {
+        this.clients = clients;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
 }

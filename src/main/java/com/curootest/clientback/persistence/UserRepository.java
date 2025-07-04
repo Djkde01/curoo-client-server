@@ -45,4 +45,10 @@ public class UserRepository implements UserDTORepository {
     public void deleteUserById(String id) {
         userCrudRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<UserDTO> findByEmail(String email) {
+        Optional<User> user = userCrudRepository.findByEmail(email);
+        return user.map(mapper::toUserDTO);
+    }
 }
