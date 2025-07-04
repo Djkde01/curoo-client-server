@@ -40,6 +40,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
+
+        final String requestPath = request.getServletPath();
+
+        // Skip JWT processing for SpringDoc paths
+        if (requestPath.startsWith("/v3/api-docs") ||
+                requestPath.startsWith("/swagger-ui") ||
+                requestPath.equals("/swagger-ui.html") ||
+                requestPath.startsWith("/swagger-resources") ||
+                requestPath.startsWith("/webjars")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
