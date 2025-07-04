@@ -1,23 +1,63 @@
 spring:
   profiles:
-    active: "dev"
+    active: ${PROFILE:dev}
 
 server:
   servlet:
     context-path: /api
 
----
-spring:
-  config:
-    activate:
-      on-profile: "dev"
-server:
-  port: 8090
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    try-it-out-enabled: true
+  show-actuator: false
 
 ---
 spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/curooclientback}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:super-secure-password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
   config:
     activate:
-      on-profile: "pdn"
+      on-profile: "dev"
+
 server:
-  port: 8080
+  port: 8090
+
+security:
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET:3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b}
+      expire-length: ${JWT_EXPIRATION:3600000}
+
+---
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  config:
+    activate:
+      on-profile: "prod"
+
+server:
+  port: ${PORT:8080}
+
+security:
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET}
+      expire-length: ${JWT_EXPIRATION:3600000}

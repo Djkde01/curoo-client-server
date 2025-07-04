@@ -41,3 +41,12 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register('buildProd') {
+    dependsOn 'build'
+    doLast {
+        println 'Production build completed'
+        println 'Remember to set environment variables:'
+        println '  DB_URL, DB_USERNAME, DB_PASSWORD, JWT_SECRET'
+    }
+}
