@@ -19,7 +19,6 @@ public interface ClientMapper {
             @Mapping(target = "idType", source = "client.idType"),
             @Mapping(target = "idNumber", source = "client.idNumber")
     })
-
     ClientDTO toClientDTO(Client client);
 
     List<ClientDTO> toClientDTOs(List<Client> clients);
@@ -27,14 +26,14 @@ public interface ClientMapper {
     List<Client> toClients(List<ClientDTO> clientDTOs);
 
     @Mappings({
-        @Mapping(target = "clientId", source = "clientDTO.id"),
-        @Mapping(target = "name", source = "clientDTO.name"),
-        @Mapping(target = "surname", source = "clientDTO.surname"),
-        @Mapping(target = "idType", source = "clientDTO.idType"),
-        @Mapping(target = "idNumber", source = "clientDTO.idNumber"),
-        @Mapping(target = "creationDate", ignore = true),
-        @Mapping(target = "modificationDate", ignore = true),
-        @Mapping(target = "userId", ignore = true)
-})
+            @Mapping(target = "clientId", source = "clientDTO.id"),
+            @Mapping(target = "name", source = "clientDTO.name"),
+            @Mapping(target = "surname", source = "clientDTO.surname"),
+            @Mapping(target = "idType", source = "clientDTO.idType"),
+            @Mapping(target = "idNumber", source = "clientDTO.idNumber"),
+            @Mapping(target = "creationDate", ignore = true),
+            @Mapping(target = "modificationDate", ignore = true),
+            @Mapping(target = "userId", ignore = true)
+    })
     Client toClient(ClientDTO clientDTO);
 }

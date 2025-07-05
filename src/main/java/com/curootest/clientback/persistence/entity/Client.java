@@ -50,6 +50,10 @@ public class Client {
         return userId;
     }
 
+    public void setUserId(User userId) {
+        this.userId = userId;
+    }
+
     public String getIdType() {
         return idType;
     }
@@ -98,6 +102,10 @@ public class Client {
 
     public void setModificationDate() {
         this.modificationDate = LocalDateTime.now();
+    }
+
+    public void setModificationDate(LocalDateTime modificationDate) {
+        this.modificationDate = modificationDate;
     }
 
 }

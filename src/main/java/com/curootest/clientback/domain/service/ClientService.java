@@ -9,35 +9,68 @@ import org.springframework.stereotype.Service;
 import com.curootest.clientback.domain.ClientDTO;
 import com.curootest.clientback.domain.repository.ClientDTORepository;
 
+/**
+ * Service for client business operations
+ * All operations are user-specific based on JWT authentication
+ */
 @Service
 public class ClientService {
 
     @Autowired
     private ClientDTORepository clientRepository;
 
-    // Method to get all clients
+    @Autowired
+    private SecurityService securityService;
+
+    /**
+     * Get all clients for the authenticated user
+     */
     public List<ClientDTO> getAllClients() {
-        return clientRepository.getAll();
+        String userEmail = securityService.getCurrentUserEmail();
+        return clientRepository.getAllByUserEmail(userEmail);
     }
 
-    // Method to get a client by ID type and ID number
+    /**
+     * Get a client by ID type and number for the authenticated user
+     */
     public Optional<ClientDTO> getClientByIdNumber(String idType, String idNumber) {
-        return clientRepository.getByIdNumber(idType, idNumber);
+        String userEmail = securityService.getCurrentUserEmail();
+        return clientRepository.getByIdNumberAndUserEmail(idType, idNumber, userEmail);
     }
 
-    // Method to save a client
+    /**
+     * Save a client for the authenticated user
+     */
     public ClientDTO saveClient(ClientDTO clientDTO) {
-        return clientRepository.saveClient(clientDTO);
+        String userEmail = securityService.getCurrentUserEmail();
+        return clientRepository.saveClient(clientDTO, userEmail);
     }
 
-    // Method to delete a client by ID
-    public boolean deleteClient(Integer clientId) {
-        try {
-            clientRepository.deleteClient(clientId);
-            return true;
-        } catch (Exception e) {
-            return false; // Handle the exception as needed
+    /**
+     * Update a client for the authenticated user
+     */
+    public Optional<ClientDTO> updateClient(Integer clientId, ClientDTO clientDTO) {
+        String userEmail = securityService.getCurrentUserEmail();
+
+        // First check if the client exists and belongs to the user
+        Optional<ClientDTO> existingClient = clientRepository.getAllByUserEmail(userEmail)
+                .stream()
+                .filter(client -> clientId.toString().equals(client.getId()))
+                .findFirst();
+
+        if (existingClient.isPresent()) {
+            clientDTO.setId(clientId.toString());
+            return Optional.of(clientRepository.saveClient(clientDTO, userEmail));
         }
+
+        return Optional.empty();
     }
 
+    /**
+     * Delete a client by ID for the authenticated user
+     */
+    public boolean deleteClient(Integer clientId) {
+        String userEmail = securityService.getCurrentUserEmail();
+        return clientRepository.deleteClientByUserEmail(clientId, userEmail);
+    }
 }

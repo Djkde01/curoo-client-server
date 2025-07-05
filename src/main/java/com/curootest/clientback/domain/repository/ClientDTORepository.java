@@ -5,12 +5,29 @@ import java.util.Optional;
 
 import com.curootest.clientback.domain.ClientDTO;
 
+/**
+ * Repository interface for client data operations
+ * All operations are user-specific for data isolation
+ */
 public interface ClientDTORepository {
-    Optional<ClientDTO> getByIdNumber(String idType, String idNumber);
 
-    List<ClientDTO> getAll();
+    /**
+     * Get all clients for a specific user
+     */
+    List<ClientDTO> getAllByUserEmail(String userEmail);
 
-    ClientDTO saveClient(ClientDTO clientDTO);
+    /**
+     * Get a client by ID type and number for a specific user
+     */
+    Optional<ClientDTO> getByIdNumberAndUserEmail(String idType, String idNumber, String userEmail);
 
-    void deleteClient(Integer clientId);
+    /**
+     * Save a client for a specific user
+     */
+    ClientDTO saveClient(ClientDTO clientDTO, String userEmail);
+
+    /**
+     * Delete a client by ID for a specific user
+     */
+    boolean deleteClientByUserEmail(Integer clientId, String userEmail);
 }
