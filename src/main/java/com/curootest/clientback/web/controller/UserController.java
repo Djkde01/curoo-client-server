@@ -1,6 +1,7 @@
 package com.curootest.clientback.web.controller;
 
 import com.curootest.clientback.domain.UserDTO;
+import com.curootest.clientback.domain.dto.LoginResponse;
 import com.curootest.clientback.domain.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,17 +40,17 @@ public class UserController {
 
         @Operation(summary = "User login", description = "Authenticates a user and returns a JWT token")
         @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "Login successful - JWT token returned", content = @Content(mediaType = "text/plain", schema = @Schema(type = "string", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."))),
-                        @ApiResponse(responseCode = "401", description = "Invalid credentials - wrong email or password", content = @Content(mediaType = "text/plain", schema = @Schema(type = "string", example = "Invalid credentials"))),
+                        @ApiResponse(responseCode = "200", description = "Login successful - JWT token returned", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponse.class))),
+                        @ApiResponse(responseCode = "401", description = "Invalid credentials - wrong email or password", content = @Content(mediaType = "application/json", schema = @Schema(type = "object", example = "{\"error\": \"Invalid credentials\"}"))),
                         @ApiResponse(responseCode = "400", description = "Bad request - missing email or password", content = @Content)
         })
         @PostMapping("/login")
-        public ResponseEntity<String> login(
+        public ResponseEntity<LoginResponse> login(
                         @Parameter(description = "User email address", required = true, example = "user@example.com") @RequestParam String email,
                         @Parameter(description = "User password", required = true, example = "password123") @RequestParam String password) {
                 return userService.login(email, password)
-                                .map(jwt -> new ResponseEntity<>(jwt, HttpStatus.OK))
-                                .orElse(new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED));
+                                .map(jwt -> new ResponseEntity<>(new LoginResponse(jwt), HttpStatus.OK))
+                                .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
         }
 
         @Operation(summary = "Update user information", description = "Updates user profile information (requires authentication)")

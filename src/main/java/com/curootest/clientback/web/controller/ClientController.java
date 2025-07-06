@@ -87,7 +87,7 @@ public class ClientController {
             @Parameter(description = "Updated client data", required = true) @RequestBody ClientDTO clientDTO) {
         return clientService.updateClient(clientId, clientDTO)
                 .map(client -> new ResponseEntity<>(client, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }
 
     @Operation(summary = "Delete a client for authenticated user", description = "Removes a client from the system by their ID, only if the client belongs to the authenticated user")
