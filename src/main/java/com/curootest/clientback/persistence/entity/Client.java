@@ -20,7 +20,7 @@ public class Client {
     private Integer clientId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id")
     private User userId;
 
     @Column(name = "id_type")

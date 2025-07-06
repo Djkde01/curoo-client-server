@@ -27,6 +27,16 @@ public interface ClientDTORepository {
     ClientDTO saveClient(ClientDTO clientDTO, String userEmail);
 
     /**
+     * Check if client exists and belongs to user
+     */
+    boolean existsByIdAndUserEmail(Integer clientId, String userEmail);
+
+    /**
+     * Update a client by ID for a specific user
+     */
+    ClientDTO updateClientByUserEmail(Integer clientId, ClientDTO clientDTO, String userEmail);
+
+    /**
      * Delete a client by ID for a specific user
      */
     boolean deleteClientByUserEmail(Integer clientId, String userEmail);
