@@ -1,10 +1,10 @@
-# 🏢 Clientback - Enterprise Client Management API
+# Curoo Clientback REST API
 
 A secure, production-ready Spring Boot REST API for managing client records with user authentication and authorization. Built with modern technologies and enterprise-grade security practices.
 
-## 📋 Project Description
+## 📋 Description
 
-**Clientback** is a comprehensive client management system that provides:
+**Curoo Clientback** is a comprehensive client management system that provides:
 
 - **User Authentication & Authorization**: JWT-based secure authentication system
 - **Client Management**: Full CRUD operations for client records with user-specific data isolation
