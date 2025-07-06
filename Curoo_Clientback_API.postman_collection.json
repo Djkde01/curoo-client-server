@@ -1,0 +1,342 @@
+{
+  "info": {
+    "_postman_id": "a_unique_id_will_be_generated_by_postman",
+    "name": "Curoo Clientback API - Production Ready",
+    "description": "Complete API collection for the Clientback Spring Boot application with JWT authentication and user-specific client management. All endpoints are production-ready and secure.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": {
+      "major": 2,
+      "minor": 0,
+      "patch": 0
+    }
+  },
+  "item": [
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"password123\",\n    \"name\": \"Test\",\n    \"surname\": \"User\",\n    \"mobilePhone\": \"1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "register"]
+            },
+            "description": "Creates a new user account in the system"
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"jwtToken\", jsonData.token);",
+                  "    console.log(\"JWT Token saved: \" + jsonData.token);",
+                  "} else {",
+                  "    console.log(\"Login failed: \" + pm.response.text());",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "email", "value": "testuser@example.com" },
+                { "key": "password", "value": "password123" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "login"]
+            },
+            "description": "Authenticates a user and returns a JWT token in JSON format: {\"token\": \"jwt_token_here\"}. The JWT token is automatically saved to the environment variable for use in subsequent requests."
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"updateduser@example.com\",\n    \"name\": \"Updated\",\n    \"surname\": \"User\",\n    \"mobilePhone\": \"0987654321\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}"]
+            },
+            "description": "Updates user profile information (requires authentication)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Client Management",
+      "item": [
+        {
+          "name": "Get All Clients for Authenticated User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "all"]
+            },
+            "description": "Retrieves a list of all clients belonging to the currently authenticated user"
+          }
+        },
+        {
+          "name": "Get Client by ID Type and Number for Authenticated User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/CC/1234567890",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "CC", "1234567890"]
+            },
+            "description": "Retrieves a specific client using their identification type and number, filtered by the authenticated user. Uses URL path parameters: /clients/{idType}/{idNumber}"
+          }
+        },
+        {
+          "name": "Create a New Client for Authenticated User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"createdClientId\", jsonData.clientId);",
+                  "    console.log(\"Client created with ID: \" + jsonData.clientId);",
+                  "} else {",
+                  "    console.log(\"Client creation failed: \" + pm.response.text());",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"idType\": \"CC\",\n    \"idNumber\": \"1234567890\",\n    \"name\": \"John\",\n    \"surname\": \"Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/save",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "save"]
+            },
+            "description": "Creates a new client record linked to the currently authenticated user. Returns HTTP 201 on success with the created client data."
+          }
+        },
+        {
+          "name": "Update an Existing Client for Authenticated User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"idType\": \"CC\",\n    \"idNumber\": \"1234567890\",\n    \"name\": \"UpdatedJohn\",\n    \"surname\": \"UpdatedDoe\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/{{clientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "{{clientId}}"]
+            },
+            "description": "Updates client information by client ID, only if the client belongs to the authenticated user. Returns HTTP 200 on success, HTTP 404 if client not found or doesn't belong to user."
+          }
+        },
+        {
+          "name": "Delete a Client for Authenticated User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/{{clientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "{{clientId}}"]
+            },
+            "description": "Removes a client from the system by their ID, only if the client belongs to the authenticated user. Returns HTTP 204 on successful deletion, HTTP 404 if client not found or doesn't belong to user."
+          }
+        },
+        {
+          "name": "Test: Get Non-Existent Client",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/999999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "999999"]
+            },
+            "description": "Test endpoint to verify 404 response for non-existent client ID. Should return HTTP 404."
+          }
+        },
+        {
+          "name": "Test: Create Client Without Auth",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"idType\": \"CC\",\n    \"idNumber\": \"9999999999\",\n    \"name\": \"Unauthorized\",\n    \"surname\": \"Test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/save",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "save"]
+            },
+            "description": "Test endpoint to verify 401 response when trying to create client without authentication. Should return HTTP 401."
+          }
+        },
+        {
+          "name": "Test: Get All Clients Without Auth",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "all"]
+            },
+            "description": "Test endpoint to verify 401 response when trying to access clients without authentication. Should return HTTP 401."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health & Monitoring",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/actuator/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "actuator", "health"]
+            },
+            "description": "Check application health status. Returns overall health status and component details."
+          }
+        },
+        {
+          "name": "Application Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/actuator/info",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "actuator", "info"]
+            },
+            "description": "Get application information including build details and version."
+          }
+        },
+        {
+          "name": "Metrics (requires auth in prod)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/actuator/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "actuator", "metrics"]
+            },
+            "description": "Get application metrics. May require authentication in production environments."
+          }
+        },
+        {
+          "name": "OpenAPI Documentation (dev only)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v3/api-docs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v3", "api-docs"]
+            },
+            "description": "Get OpenAPI 3.0 specification. Available only in development environment."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "description": "Base URL for the API. Change to your production URL when needed."
+    },
+    {
+      "key": "prodBaseUrl",
+      "value": "https://your-production-domain.com",
+      "description": "Production base URL"
+    },
+    {
+      "key": "jwtToken",
+      "value": "",
+      "description": "JWT token automatically set after successful login"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "description": "User ID for testing user operations"
+    },
+    {
+      "key": "clientId",
+      "value": "1",
+      "description": "Client ID for testing client operations"
+    },
+    {
+      "key": "createdClientId",
+      "value": "",
+      "description": "ID of the most recently created client"
+    }
+  ]
+}
