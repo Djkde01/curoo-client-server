@@ -69,7 +69,7 @@ fi
 
 # Start services with Docker Compose
 print_status "Starting services with Docker Compose..."
-docker-compose up -d
+docker compose up -d
 
 if [ $? -eq 0 ]; then
     print_success "Services started successfully"
@@ -78,8 +78,8 @@ if [ $? -eq 0 ]; then
     print_status "📚 Swagger UI available at: http://localhost:${SERVER_PORT:-8080}/api/swagger-ui.html"
     print_status "🏥 Health check at: http://localhost:${SERVER_PORT:-8080}/api/actuator/health"
     echo ""
-    print_status "To view logs: docker-compose logs -f app"
-    print_status "To stop services: docker-compose down"
+    print_status "To view logs: docker compose logs -f app"
+    print_status "To stop services: docker compose down"
 else
     print_error "Failed to start services"
     exit 1
